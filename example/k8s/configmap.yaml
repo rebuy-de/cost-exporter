@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cost-exporter
+  labels:
+    app: cost-exporter
+data:
+  config.yaml: |-
+    accounts:
+    - name: staging
+      id: ABCDEFGHIJKLMNOPQRST
+      secret: 1234567890123456789012345678901234567890
+    settings:
+      costCron: "0 0 19 * * *"
+      coresInterval: 300

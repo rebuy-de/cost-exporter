@@ -1,0 +1,52 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+
+metadata:
+  name: cost-exporter
+  labels:
+    app: cost-exporter
+
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+
+  selector:
+    matchLabels:
+      app: cost-exporter
+
+  template:
+    metadata:
+      name: cost-exporter
+      labels:
+        app: cost-exporter
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+
+    spec:
+      containers:
+      - name: silo
+        image: quay.io/rebuy/cost-exporter:master
+        imagePullPolicy: Always
+        args:
+          - '--config=/cost-exporter/config.yaml'
+          - '--port=8080'
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 10m
+            memory: 50Mi
+          limits:
+            cpu: 10m
+            memory: 50Mi
+        volumeMounts:
+          - name: config-volume
+            mountPath: /cost-exporter
+      volumes:
+      - name: config-volume
+        configMap:
+          name: cost-exporter
