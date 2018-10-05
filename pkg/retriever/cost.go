@@ -52,6 +52,7 @@ func (c *CostRetriever) scheduleCron() {
 func (c *CostRetriever) getCosts() {
 	for _, account := range c.Accounts {
 		c.getReservationCoverage(account)
+		c.getReservationUtilization(account)
 		c.getCostsByService(account)
 	}
 }
@@ -99,6 +100,27 @@ func (c *CostRetriever) getReservationCoverage(account config.Account) {
 	}
 
 	coveragePercent, err := strconv.ParseFloat(*respReservation.Total.CoverageHours.CoverageHoursPercentage, 64)
+	if err != nil {
+		logrus.Fatal(err)
+	}
+
+	prom.C.SetReservationCoverage(account.Name, coveragePercent)
+}
+
+func (c *CostRetriever) getReservationUtilization(account config.Account) {
+	logrus.Infof("Getting reservation utilization for account '%s'", account.Name)
+	svc := c.Services[account.Name]
+
+	respReservation, err := svc.GetReservationUtilization(&costexplorer.GetReservationUtilizationInput{
+		Granularity: aws.String("DAILY"),
+		// Unfortunately there is no newer data then 3 days ago.
+		TimePeriod: utils.GetIntervalForPastDay(3),
+	})
+	if err != nil {
+		logrus.Fatal(err)
+	}
+
+	coveragePercent, err := strconv.ParseFloat(*respReservation.Total.UtilizationPercentage, 64)
 	if err != nil {
 		logrus.Fatal(err)
 	}
