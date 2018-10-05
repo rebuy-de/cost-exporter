@@ -81,6 +81,12 @@ func (c *CostRetriever) getCostsByService(account config.Account) {
 		if err != nil {
 			logrus.Fatal(err)
 		}
+
+		// ignore taxes because they are not attributed to billing in real-time
+		if *cost.Keys[0] == "Tax" {
+			continue
+		}
+
 		prom.C.SetCosts(account.Name, *cost.Keys[0], amount)
 	}
 }
