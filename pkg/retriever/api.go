@@ -9,12 +9,13 @@ import (
 	"github.com/aws/aws-sdk-go/aws/endpoints"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/rebuy-de/cost-exporter/pkg/config"
 	"github.com/rebuy-de/cost-exporter/pkg/prom"
 	"github.com/sirupsen/logrus"
 )
 
-type CoreRetriever struct {
+type APIRetriever struct {
 	Accounts    []config.Account
 	IntervalSec int64
 	Services    []Service
@@ -26,13 +27,14 @@ type Service struct {
 	Account string
 }
 
-func (c *CoreRetriever) Run() {
+func (c *APIRetriever) Run() {
 	c.initialize()
 	c.getCores()
+	c.getSpotInstances()
 	go c.scheduleInterval()
 }
 
-func (c *CoreRetriever) initialize() {
+func (c *APIRetriever) initialize() {
 	for _, account := range c.Accounts {
 		regions := endpoints.AwsPartition().Services()[endpoints.Ec2ServiceID].Regions()
 		for regionName := range regions {
@@ -55,13 +57,14 @@ func (c *CoreRetriever) initialize() {
 	}
 }
 
-func (c *CoreRetriever) scheduleInterval() {
+func (c *APIRetriever) scheduleInterval() {
 	for range time.Tick(time.Duration(c.IntervalSec) * time.Second) {
 		c.getCores()
+		c.getSpotInstances()
 	}
 }
 
-func (c *CoreRetriever) getCores() {
+func (c *APIRetriever) getCores() {
 	for _, service := range c.Services {
 		logrus.Infof("Getting cores for account '%s' and region '%s'", service.Account, service.Region)
 		var totalCoreCount int64
@@ -79,4 +82,29 @@ func (c *CoreRetriever) getCores() {
 		}
 		prom.C.SetTotalCoreCount(service.Account, service.Region, float64(totalCoreCount))
 	}
+}
+
+func (c *APIRetriever) getSpotInstances() {
+	spotRequestItems := []prometheus.Labels{}
+	for _, service := range c.Services {
+		logrus.Infof("Getting SpotInstances for account '%s' and region '%s'", service.Account, service.Region)
+		resp, err := service.svc.DescribeSpotInstanceRequests(&ec2.DescribeSpotInstanceRequestsInput{})
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		for _, request := range resp.SpotInstanceRequests {
+			labels := prometheus.Labels{
+				"account":           service.Account,
+				"region":            service.Region,
+				"state":             *request.State,
+				"code":              *request.Status.Code,
+				"instance_type":     *request.LaunchSpecification.InstanceType,
+				"instance_id":       *request.InstanceId,
+				"availability_zone": *request.LaunchedAvailabilityZone,
+			}
+			spotRequestItems = append(spotRequestItems, labels)
+		}
+	}
+	prom.C.SetSpotRequest(spotRequestItems)
 }

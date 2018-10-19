@@ -8,6 +8,7 @@ type Costs struct {
 	Cost                prometheus.GaugeVec
 	CoreCount           prometheus.GaugeVec
 	ReservationCoverage prometheus.GaugeVec
+	SpotRequest         prometheus.GaugeVec
 }
 
 var C = Costs{
@@ -38,6 +39,15 @@ var C = Costs{
 		},
 		[]string{"account"},
 	),
+	SpotRequest: *prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Namespace: "rebuy",
+			Subsystem: "cost_exporter",
+			Name:      "spotinstancerequest",
+			Help:      "Spot Instance Request",
+		},
+		[]string{"account", "region", "state", "code", "instance_type", "instance_id", "availability_zone"},
+	),
 }
 
 func (c *Costs) SetTotalCoreCount(account string, region string, count float64) {
@@ -58,4 +68,11 @@ func (c *Costs) SetReservationCoverage(account string, coverage float64) {
 	c.ReservationCoverage.With(prometheus.Labels{
 		"account": account,
 	}).Set(coverage)
+}
+
+func (c *Costs) SetSpotRequest(spotRequestItems []prometheus.Labels) {
+	c.SpotRequest.Reset()
+	for _, label := range spotRequestItems {
+		c.SpotRequest.With(label).Set(1)
+	}
 }

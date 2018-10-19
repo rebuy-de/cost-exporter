@@ -21,11 +21,11 @@ func (app *App) Run(cmd *cobra.Command, args []string) {
 
 	config := config.Parse(app.config)
 
-	coreRetriever := retriever.CoreRetriever{
+	APIRetriever := retriever.APIRetriever{
 		Accounts:    config.Accounts,
 		IntervalSec: config.Settings.CoresInterval,
 	}
-	coreRetriever.Run()
+	APIRetriever.Run()
 
 	costRetriever := retriever.CostRetriever{
 		Accounts: config.Accounts,
