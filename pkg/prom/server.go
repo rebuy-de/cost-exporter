@@ -14,6 +14,7 @@ func Run(port string) {
 	r.MustRegister(C.CoreCount)
 	r.MustRegister(C.Cost)
 	r.MustRegister(C.ReservationCoverage)
+	r.MustRegister(C.SpotRequest)
 
 	http.Handle("/metrics", promhttp.HandlerFor(r, promhttp.HandlerOpts{}))
 
