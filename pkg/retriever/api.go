@@ -94,13 +94,20 @@ func (c *APIRetriever) getSpotInstances() {
 		}
 
 		for _, request := range resp.SpotInstanceRequests {
+			var instanceID string
+			if request.InstanceId == nil {
+				instanceID = ""
+			} else {
+				instanceID = *request.InstanceId
+			}
+
 			labels := prometheus.Labels{
 				"account":           service.Account,
 				"region":            service.Region,
 				"state":             *request.State,
 				"code":              *request.Status.Code,
 				"instance_type":     *request.LaunchSpecification.InstanceType,
-				"instance_id":       *request.InstanceId,
+				"instance_id":       instanceID,
 				"availability_zone": *request.LaunchedAvailabilityZone,
 			}
 			spotRequestItems = append(spotRequestItems, labels)
