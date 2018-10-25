@@ -101,6 +101,13 @@ func (c *APIRetriever) getSpotInstances() {
 				instanceID = *request.InstanceId
 			}
 
+			var launchedAvailabilityZone string
+			if request.LaunchedAvailabilityZone == nil {
+				launchedAvailabilityZone = ""
+			} else {
+				launchedAvailabilityZone = *request.LaunchedAvailabilityZone
+			}
+
 			labels := prometheus.Labels{
 				"account":           service.Account,
 				"region":            service.Region,
@@ -108,7 +115,7 @@ func (c *APIRetriever) getSpotInstances() {
 				"code":              *request.Status.Code,
 				"instance_type":     *request.LaunchSpecification.InstanceType,
 				"instance_id":       instanceID,
-				"availability_zone": *request.LaunchedAvailabilityZone,
+				"availability_zone": launchedAvailabilityZone,
 			}
 			spotRequestItems = append(spotRequestItems, labels)
 		}
