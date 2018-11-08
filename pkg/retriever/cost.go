@@ -126,10 +126,10 @@ func (c *CostRetriever) getReservationUtilization(account config.Account) {
 		logrus.Fatal(err)
 	}
 
-	coveragePercent, err := strconv.ParseFloat(*respReservation.Total.UtilizationPercentage, 64)
+	utilizationPercent, err := strconv.ParseFloat(*respReservation.Total.UtilizationPercentage, 64)
 	if err != nil {
 		logrus.Fatal(err)
 	}
 
-	prom.C.SetReservationCoverage(account.Name, coveragePercent)
+	prom.C.SetReservationUtilization(account.Name, utilizationPercent)
 }
