@@ -5,10 +5,11 @@ import (
 )
 
 type Costs struct {
-	Cost                prometheus.GaugeVec
-	CoreCount           prometheus.GaugeVec
-	ReservationCoverage prometheus.GaugeVec
-	SpotRequest         prometheus.GaugeVec
+	Cost                   prometheus.GaugeVec
+	CoreCount              prometheus.GaugeVec
+	ReservationCoverage    prometheus.GaugeVec
+	ReservationUtilization prometheus.GaugeVec
+	SpotRequest            prometheus.GaugeVec
 }
 
 var C = Costs{
@@ -39,6 +40,15 @@ var C = Costs{
 		},
 		[]string{"account"},
 	),
+	ReservationUtilization: *prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Namespace: "rebuy",
+			Subsystem: "cost_exporter",
+			Name:      "reservationutilization",
+			Help:      "Utilization reservations in percent.",
+		},
+		[]string{"account"},
+	),
 	SpotRequest: *prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Namespace: "rebuy",
@@ -66,6 +76,12 @@ func (c *Costs) SetCosts(account string, service string, cost float64) {
 
 func (c *Costs) SetReservationCoverage(account string, coverage float64) {
 	c.ReservationCoverage.With(prometheus.Labels{
+		"account": account,
+	}).Set(coverage)
+}
+
+func (c *Costs) SetReservationUtilization(account string, coverage float64) {
+	c.ReservationUtilization.With(prometheus.Labels{
 		"account": account,
 	}).Set(coverage)
 }
