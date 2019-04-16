@@ -1,4 +1,4 @@
-FROM golang:1.10-alpine as builder
+FROM golang:1.12-alpine as builder
 
 RUN apk add --no-cache git make
 
@@ -24,4 +24,6 @@ COPY run.sh /run.sh
 
 RUN chmod +x /run.sh
 
+RUN adduser -D cost-exporter
+USER cost-exporter
 ENTRYPOINT ["/run.sh"]
