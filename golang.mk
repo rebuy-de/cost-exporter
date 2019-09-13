@@ -1,20 +1,17 @@
 # Source: https://github.com/rebuy-de/golang-template
-# Version: 2.0.4-snapshot
-# Dependencies:
-# * dep (https://github.com/golang/dep)
-# * gocov (https://github.com/axw/gocov)
-# * gocov-html (https://github.com/matm/gocov-html)
 
+TARGETS?="."
+PACKAGE=$(shell GOPATH= go list $(TARGET))
 NAME=$(notdir $(PACKAGE))
 
 BUILD_VERSION=$(shell git describe --always --dirty --tags | tr '-' '.' )
-BUILD_DATE=$(shell date)
+BUILD_DATE=$(shell LC_ALL=C date)
 BUILD_HASH=$(shell git rev-parse HEAD)
 BUILD_MACHINE=$(shell echo $$HOSTNAME)
 BUILD_USER=$(shell whoami)
 BUILD_ENVIRONMENT=$(BUILD_USER)@$(BUILD_MACHINE)
 
-BUILD_XDST=$(PACKAGE)/vendor/github.com/rebuy-de/rebuy-go-sdk/cmdutil
+BUILD_XDST=github.com/rebuy-de/rebuy-go-sdk/cmdutil
 BUILD_FLAGS=-ldflags "\
 	$(ADDITIONAL_LDFLAGS) \
 	-X '$(BUILD_XDST).BuildName=$(NAME)' \
@@ -25,17 +22,16 @@ BUILD_FLAGS=-ldflags "\
 	-X '$(BUILD_XDST).BuildEnvironment=$(BUILD_ENVIRONMENT)' \
 "
 
-GOFILES=$(shell find . -type f -name '*.go' -not -path "./vendor/*")
+GOFILES=$(shell find . -type f -name '*.go' -not -path "./vendor/*" -not -path "./.git/*")
 GOPKGS=$(shell go list ./...)
+
+OUTPUT_FILE=$(NAME)-$(BUILD_VERSION)-$(shell go env GOOS)-$(shell go env GOARCH)$(shell go env GOEXE)
+OUTPUT_LINK=$(NAME)$(shell go env GOEXE)
 
 default: build
 
-Gopkg.lock: Gopkg.toml
-	dep ensure
-	touch Gopkg.lock
-
-vendor: Gopkg.lock Gopkg.toml
-	dep ensure
+vendor: go.mod go.sum
+	go mod vendor
 	touch vendor
 
 format:
@@ -47,38 +43,36 @@ vet: vendor
 lint:
 	$(foreach pkg,$(GOPKGS),golint $(pkg);)
 
-test_gopath:
-	test $$(go list) = "$(PACKAGE)"
-
 test_packages: vendor
 	go test $(GOPKGS)
 
 test_format:
 	gofmt -s -l $(GOFILES)
 
-test: test_gopath test_format vet lint test_packages
+test: test_format vet lint test_packages
 
 cov:
 	gocov test -v $(GOPKGS) \
 		| gocov-html > coverage.html
 
-build: vendor
-	go build \
+_build: vendor
+	mkdir -p dist
+	$(foreach TARGET,$(TARGETS),go build \
 		$(BUILD_FLAGS) \
-		-o $(NAME)-$(BUILD_VERSION)-$(shell go env GOOS)-$(shell go env GOARCH)$(shell go env GOEXE)
-	ln -sf $(NAME)-$(BUILD_VERSION)-$(shell go env GOOS)-$(shell go env GOARCH)$(shell go env GOEXE) $(NAME)$(shell go env GOEXE)
+		-o dist/$(OUTPUT_FILE) \
+		$(TARGET);\
+	)
+
+build: _build
+	$(foreach TARGET,$(TARGETS),ln -sf $(OUTPUT_FILE) dist/$(OUTPUT_LINK);)
 
 xc:
-	GOOS=linux GOARCH=amd64 make build
-	GOOS=darwin GOARCH=amd64 make build
-	GOOS=windows GOARCH=386 make build
-	GOOS=windows GOARCH=amd64 make build
+	GOOS=linux GOARCH=amd64 $(MAKE) _build
+	GOOS=darwin GOARCH=amd64 $(MAKE) _build
 
-install: test
-	go install \
-		$(BUILD_FLAGS)
+install: vendor test
+	$(foreach TARGET,$(TARGETS),go install \
+		$(BUILD_FLAGS);)
 
 clean:
-	rm -f $(NAME)*
-
-.PHONY: build install test
+	rm dist/*

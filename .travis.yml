@@ -12,10 +12,10 @@ script:
   --name cost-exporter
   --entrypoint "sh"
   -e CGO_ENABLED=0
-  --workdir "/go/src/github.com/rebuy-de/cost-exporter"
+  --workdir "/src"
   cost-exporter
-  -euxc "make xc && mkdir releases && mv cost-exporter-* releases"
-- docker cp -L cost-exporter:/go/src/github.com/rebuy-de/cost-exporter/releases ./releases
+  -euxc "make xc && mkdir releases && mv dist/cost-exporter-* releases"
+- docker cp -L cost-exporter:/src/releases ./releases
 - ls -l *
 
 deploy:

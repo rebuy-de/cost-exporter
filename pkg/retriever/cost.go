@@ -10,7 +10,7 @@ import (
 	"github.com/rebuy-de/cost-exporter/pkg/config"
 	"github.com/rebuy-de/cost-exporter/pkg/prom"
 	"github.com/rebuy-de/cost-exporter/pkg/utils"
-	"github.com/robfig/cron"
+	"github.com/robfig/cron/v3"
 	"github.com/sirupsen/logrus"
 )
 
