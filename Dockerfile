@@ -1,29 +1,30 @@
-FROM golang:1.12-alpine as builder
+# Source: https://github.com/rebuy-de/golang-template
+
+FROM golang:1.13-alpine as builder
 
 RUN apk add --no-cache git make
 
 # Configure Go
-ENV GOPATH /go
-ENV PATH /go/bin:$PATH
+ENV GOPATH=/go PATH=/go/bin:$PATH CGO_ENABLED=0 GO111MODULE=on
 RUN mkdir -p ${GOPATH}/src ${GOPATH}/bin
 
 # Install Go Tools
-RUN go get -u golang.org/x/lint/golint
-RUN go get -u github.com/golang/dep/cmd/dep
+RUN GO111MODULE= go get -u golang.org/x/lint/golint
 
-COPY . /go/src/github.com/rebuy-de/cost-exporter
-WORKDIR /go/src/github.com/rebuy-de/cost-exporter
-RUN CGO_ENABLED=0 make install
+COPY . /src
+WORKDIR /src
+RUN set -x \
+ && make test \
+ && make build \
+ && cp /src/dist/cost-exporter /usr/local/bin/
 
 FROM alpine:latest
-
 RUN apk add --no-cache ca-certificates
 
-COPY --from=builder /go/bin/cost-exporter /usr/local/bin/
+COPY --from=builder /usr/local/bin/* /usr/local/bin/
 COPY run.sh /run.sh
-
-RUN chmod +x /run.sh
 
 RUN adduser -D cost-exporter
 USER cost-exporter
+
 ENTRYPOINT ["/run.sh"]
