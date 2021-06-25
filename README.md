@@ -1,7 +1,7 @@
 # cost-exporter
 
-[![Build Status](https://travis-ci.org/rebuy-de/cost-exporter.svg?branch=master)](https://travis-ci.org/rebuy-de/cost-exporter)
-[![license](https://img.shields.io/github/license/rebuy-de/cost-exporter.svg)]()
+![Build Status](https://github.com/rebuy-de/cost-exporter/workflows/Golang%20CI/badge.svg?branch=master)
+![license](https://img.shields.io/github/license/rebuy-de/cost-exporter.svg)
 
 Retrieves cost metrics and core counts from the AWS API and exposes this information via a Prometheus `/metrics` endpoint.
 
@@ -16,21 +16,16 @@ Retrieves cost metrics and core counts from the AWS API and exposes this informa
 Docker containers are are provided [here](https://quay.io/repository/rebuy/cost-exporter). To obtain the latest docker image run `docker pull quay.io/rebuy/cost-exporter:master`.
 
 To compile *cost-exporter* from source you need a working
-[Golang](https://golang.org/doc/install) development environment. The sources
-must be cloned to `$GOPATH/src/github.com/rebuy-de/cost-exporter`.
+[Golang](https://golang.org/doc/install) development environment.
 
-Also you need to install [godep](github.com/golang/dep/cmd/dep),
-[golint](https://github.com/golang/lint/) and [GNU
-Make](https://www.gnu.org/software/make/).
-
-Then you just need to run `make build` to compile a binary into the project
-directory or `make install` to install *cost-exporter* into `$GOPATH/bin`. With
-`make xc` you can cross compile *cost-exporter* for other platforms.
+Then you just need to run `./buildutil` to compile a binary into the project
+directory which you can then execute. With `./buildutil -x linux/arm64`
+you can cross compile *cost-exporter* for other platforms.
 
 
 ## Usage
 
-**node-drainer**'s configuration is done using an configuration file that is pointed to when running the command, as well as a flag that defines the port it should listen on:
+**cost-exporter**'s configuration is done using an configuration file that is pointed to when running the command, as well as a flag that defines the port it should listen on:
 ```
 cost-exporter --config=/cost-exporter/config.yaml --port=8080
 ```
