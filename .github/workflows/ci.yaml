@@ -43,7 +43,7 @@ jobs:
         if [ "${GITHUB_EVENT_NAME}" == "pull_request" ]; then
           echo "##[set-output name=tags;]quay.io/rebuy/cost-exporter:${GITHUB_HEAD_REF}"
         else
-          echo "##[set-output name=tags;]quay.io/rebuy/cost-exporter:main,\
+          echo "##[set-output name=tags;]quay.io/rebuy/cost-exporter:master,\
             quay.io/rebuy/cost-exporter:latest"
         fi
       id: generate_tags
