@@ -4,7 +4,7 @@ set -euo pipefail
 
 cd $(dirname "$0")
 
-VERSION="v3.7.0"
+VERSION="v3.8.0"
 
 get_arch() {
     ARCH=$(uname -m)
