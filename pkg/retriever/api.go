@@ -76,7 +76,7 @@ func (c *APIRetriever) getCores() {
 		for _, reservation := range resp2.Reservations {
 			for _, instance := range reservation.Instances {
 				if *instance.State.Name == "running" {
-					totalCoreCount = totalCoreCount + *instance.CpuOptions.CoreCount
+					totalCoreCount += *instance.CpuOptions.CoreCount * *instance.CpuOptions.ThreadsPerCore
 				}
 			}
 		}
