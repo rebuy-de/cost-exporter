@@ -3,7 +3,7 @@ module github.com/rebuy-de/cost-exporter
 go 1.19
 
 require (
-	github.com/aws/aws-sdk-go v1.44.114
+	github.com/aws/aws-sdk-go v1.44.116
 	github.com/prometheus/client_golang v1.13.0
 	github.com/rebuy-de/rebuy-go-sdk/v3 v3.12.0
 	github.com/robfig/cron/v3 v3.0.1
