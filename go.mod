@@ -8,7 +8,7 @@ require (
 	github.com/rebuy-de/rebuy-go-sdk/v3 v3.12.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sirupsen/logrus v1.9.0
-	github.com/spf13/cobra v1.6.0
+	github.com/spf13/cobra v1.6.1
 	gopkg.in/yaml.v2 v2.4.0
 )
 
