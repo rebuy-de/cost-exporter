@@ -1,6 +1,6 @@
 # cost-exporter
 
-![Build Status](https://github.com/rebuy-de/cost-exporter/workflows/Golang%20CI/badge.svg?branch=master)
+![Build Status](https://github.com/rebuy-de/cost-exporter/workflows/Golang/badge.svg?branch=main)
 ![license](https://img.shields.io/github/license/rebuy-de/cost-exporter.svg)
 
 Retrieves cost metrics and core counts from the AWS API and exposes this information via a Prometheus `/metrics` endpoint.
@@ -13,7 +13,7 @@ Retrieves cost metrics and core counts from the AWS API and exposes this informa
 
 ## Installation
 
-Docker containers are are provided [here](https://quay.io/repository/rebuy/cost-exporter). To obtain the latest docker image run `docker pull quay.io/rebuy/cost-exporter:master`.
+Docker containers are are provided [here](https://quay.io/repository/rebuy/cost-exporter). To obtain the latest docker image run `docker pull quay.io/rebuy/cost-exporter:main`.
 
 To compile *cost-exporter* from source you need a working
 [Golang](https://golang.org/doc/install) development environment.

@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: silo
-        image: quay.io/rebuy/cost-exporter:master
+        image: quay.io/rebuy/cost-exporter:main
         imagePullPolicy: Always
         args:
           - '--config=/cost-exporter/config.yaml'

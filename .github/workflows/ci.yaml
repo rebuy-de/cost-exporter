@@ -2,7 +2,7 @@ name: Golang
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
     types: [opened, reopened, synchronize]
   release:
@@ -53,7 +53,7 @@ jobs:
           BRANCH="$(echo ${GITHUB_HEAD_REF} | tr '/' '_')"
           echo "##[set-output name=tags;]quay.io/rebuy/cost-exporter:${BRANCH},074509403805.dkr.ecr.eu-west-1.amazonaws.com/cost-exporter:${BRANCH}"
         else
-          echo "##[set-output name=tags;]quay.io/rebuy/cost-exporter:master,074509403805.dkr.ecr.eu-west-1.amazonaws.com/cost-exporter:master,\
+          echo "##[set-output name=tags;]quay.io/rebuy/cost-exporter:main,074509403805.dkr.ecr.eu-west-1.amazonaws.com/cost-exporter:main,\
             quay.io/rebuy/cost-exporter:latest,074509403805.dkr.ecr.eu-west-1.amazonaws.com/cost-exporter:latest"
         fi
       id: generate_tags_pr
