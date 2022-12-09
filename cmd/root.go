@@ -6,8 +6,8 @@ import (
 	"github.com/rebuy-de/cost-exporter/pkg/config"
 	"github.com/rebuy-de/cost-exporter/pkg/prom"
 	"github.com/rebuy-de/cost-exporter/pkg/retriever"
-	"github.com/rebuy-de/rebuy-go-sdk/v3/pkg/cmdutil"
-	_ "github.com/rebuy-de/rebuy-go-sdk/v3/pkg/instutil"
+	"github.com/rebuy-de/rebuy-go-sdk/v4/pkg/cmdutil"
+	_ "github.com/rebuy-de/rebuy-go-sdk/v4/pkg/instutil"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -42,13 +42,13 @@ func (app *App) Run(ctx context.Context, cmd *cobra.Command, args []string) {
 		Accounts:    config.Accounts,
 		IntervalSec: config.Settings.CoresInterval,
 	}
-	APIRetriever.Run()
+	APIRetriever.Run(ctx)
 
 	costRetriever := retriever.CostRetriever{
 		Accounts: config.Accounts,
 		Cron:     config.Settings.CostCron,
 	}
-	costRetriever.Run()
+	costRetriever.Run(ctx)
 
 	prom.Run(app.port)
 

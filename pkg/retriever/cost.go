@@ -1,43 +1,48 @@
 package retriever
 
 import (
+	"context"
+	"fmt"
 	"strconv"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/costexplorer"
-	"github.com/rebuy-de/cost-exporter/pkg/config"
-	"github.com/rebuy-de/cost-exporter/pkg/prom"
-	"github.com/rebuy-de/cost-exporter/pkg/utils"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials"
+	"github.com/aws/aws-sdk-go-v2/service/costexplorer"
+	"github.com/aws/aws-sdk-go-v2/service/costexplorer/types"
 	"github.com/robfig/cron/v3"
 	"github.com/sirupsen/logrus"
+
+	ceConfig "github.com/rebuy-de/cost-exporter/pkg/config"
+	"github.com/rebuy-de/cost-exporter/pkg/prom"
+	"github.com/rebuy-de/cost-exporter/pkg/utils"
 )
 
 type CostRetriever struct {
-	Accounts []config.Account
+	Accounts []ceConfig.Account
 	Cron     string
-	Services map[string]*costexplorer.CostExplorer
+	Services map[string]*costexplorer.Client
 }
 
-func (c *CostRetriever) Run() {
-	c.initialize()
+func (c *CostRetriever) Run(ctx context.Context) {
+	c.initialize(ctx)
 	c.getCosts()
 	c.scheduleCron()
 }
 
-func (c *CostRetriever) initialize() {
-	c.Services = make(map[string]*costexplorer.CostExplorer)
+func (c *CostRetriever) initialize(ctx context.Context) {
+	c.Services = make(map[string]*costexplorer.Client)
 	for _, account := range c.Accounts {
-		opts := session.Options{
-			Config: aws.Config{
-				Credentials: credentials.NewStaticCredentials(
-					account.ID,
-					account.Secret,
-					"",
-				)}}
-		sess := session.Must(session.NewSessionWithOptions(opts))
-		svc := costexplorer.New(sess)
+		credProvider := credentials.NewStaticCredentialsProvider(account.ID, account.Secret, "")
+		conf, err := config.LoadDefaultConfig(ctx,
+			config.WithCredentialsProvider(credProvider),
+			config.WithRegion("eu-west-1"),
+		)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		svc := costexplorer.NewFromConfig(conf)
 
 		c.Services[account.Name] = svc
 	}
@@ -50,28 +55,27 @@ func (c *CostRetriever) scheduleCron() {
 }
 
 func (c *CostRetriever) getCosts() {
+	ctx := context.Background()
 	for _, account := range c.Accounts {
-		c.getReservationCoverage(account)
-		c.getReservationUtilization(account)
-		c.getCostsByService(account)
+		c.getReservationCoverage(ctx, account)
+		c.getReservationUtilization(ctx, account)
+		c.getCostsByService(ctx, account)
 	}
 }
 
-func (c *CostRetriever) getCostsByService(account config.Account) {
+func (c *CostRetriever) getCostsByService(ctx context.Context, account ceConfig.Account) {
 	logrus.Infof("Getting costs for account '%s'", account.Name)
 	svc := c.Services[account.Name]
-	respCost, err := svc.GetCostAndUsage((&costexplorer.GetCostAndUsageInput{
-		Metrics: []*string{aws.String("BlendedCost")},
+	respCost, err := svc.GetCostAndUsage(ctx, (&costexplorer.GetCostAndUsageInput{
+		Metrics: []string{"BlendedCost"},
 		// Getting the cost from 2 days ago is a workaround because getting data
 		// for yesterday yielded unstable numbers:
 		TimePeriod:  utils.GetIntervalForPastDay(2),
-		Granularity: aws.String("DAILY"),
-		GroupBy: []*costexplorer.GroupDefinition{
-			&costexplorer.GroupDefinition{
-				Key:  aws.String("SERVICE"),
-				Type: aws.String("DIMENSION"),
-			},
-		},
+		Granularity: types.GranularityDaily,
+		GroupBy: []types.GroupDefinition{{
+			Key:  aws.String("SERVICE"),
+			Type: types.GroupDefinitionTypeDimension,
+		}},
 	}))
 	if err != nil {
 		logrus.Fatal(err)
@@ -84,20 +88,20 @@ func (c *CostRetriever) getCostsByService(account config.Account) {
 		}
 
 		// ignore taxes because they are not attributed to billing in real-time
-		if *cost.Keys[0] == "Tax" {
+		if cost.Keys[0] == "Tax" {
 			continue
 		}
 
-		prom.C.SetCosts(account.Name, *cost.Keys[0], amount)
+		prom.C.SetCosts(account.Name, cost.Keys[0], amount)
 	}
 }
 
-func (c *CostRetriever) getReservationCoverage(account config.Account) {
+func (c *CostRetriever) getReservationCoverage(ctx context.Context, account ceConfig.Account) {
 	logrus.Infof("Getting reservation coverage for account '%s'", account.Name)
 	svc := c.Services[account.Name]
 
-	respReservation, err := svc.GetReservationCoverage(&costexplorer.GetReservationCoverageInput{
-		Granularity: aws.String("DAILY"),
+	respReservation, err := svc.GetReservationCoverage(ctx, &costexplorer.GetReservationCoverageInput{
+		Granularity: types.GranularityDaily,
 		// Unfortunately there is no newer data then 3 days ago.
 		TimePeriod: utils.GetIntervalForPastDay(3),
 	})
@@ -113,12 +117,12 @@ func (c *CostRetriever) getReservationCoverage(account config.Account) {
 	prom.C.SetReservationCoverage(account.Name, coveragePercent)
 }
 
-func (c *CostRetriever) getReservationUtilization(account config.Account) {
+func (c *CostRetriever) getReservationUtilization(ctx context.Context, account ceConfig.Account) {
 	logrus.Infof("Getting reservation utilization for account '%s'", account.Name)
 	svc := c.Services[account.Name]
 
-	respReservation, err := svc.GetReservationUtilization(&costexplorer.GetReservationUtilizationInput{
-		Granularity: aws.String("DAILY"),
+	respReservation, err := svc.GetReservationUtilization(ctx, &costexplorer.GetReservationUtilizationInput{
+		Granularity: types.GranularityDaily,
 		// Unfortunately there is no newer data then 3 days ago.
 		TimePeriod: utils.GetIntervalForPastDay(3),
 	})
