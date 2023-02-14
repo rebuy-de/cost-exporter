@@ -9,7 +9,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/costexplorer v1.25.1
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.84.1
 	github.com/prometheus/client_golang v1.14.0
-	github.com/rebuy-de/rebuy-go-sdk/v4 v4.3.0
+	github.com/rebuy-de/rebuy-go-sdk/v4 v4.4.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.6.1

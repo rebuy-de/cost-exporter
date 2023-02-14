@@ -337,8 +337,8 @@ github.com/prometheus/procfs v0.6.0/go.mod h1:cz+aTbrPOrUb4q7XlbU9ygM+/jj0fzG6c1
 github.com/prometheus/procfs v0.7.3/go.mod h1:cz+aTbrPOrUb4q7XlbU9ygM+/jj0fzG6c1xBZuNvfVA=
 github.com/prometheus/procfs v0.8.0 h1:ODq8ZFEaYeCaZOJlZZdJA2AbQR98dSHSM1KW/You5mo=
 github.com/prometheus/procfs v0.8.0/go.mod h1:z7EfXMXOkbkqb9IINtpCn86r/to3BnA0uaxHdg830/4=
-github.com/rebuy-de/rebuy-go-sdk/v4 v4.3.0 h1:iytQg040vkxN3TZy4ljgFS9FFvDHmh5nzuOTc1nq54U=
-github.com/rebuy-de/rebuy-go-sdk/v4 v4.3.0/go.mod h1:NAhXHYuevxVCzx5MuCJ98jnXovZ86xZTikhjnw9Tjm0=
+github.com/rebuy-de/rebuy-go-sdk/v4 v4.4.0 h1:WvKYijbZFADie9Hc5E38AlbjvZQ54VZIhsMDNCkBmZs=
+github.com/rebuy-de/rebuy-go-sdk/v4 v4.4.0/go.mod h1:NAhXHYuevxVCzx5MuCJ98jnXovZ86xZTikhjnw9Tjm0=
 github.com/robfig/cron/v3 v3.0.1 h1:WdRxkvbJztn8LMz/QEvLN5sBU+xKpSqwwUO1Pjr4qDs=
 github.com/robfig/cron/v3 v3.0.1/go.mod h1:eQICP3HwyT7UooqI/z+Ov+PtYAWygg1TEWWzGIFLtro=
 github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
