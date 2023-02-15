@@ -42,7 +42,7 @@ jobs:
     - name: Generate image tags for releaes
       if: ${{ github.event_name == 'release' }}
       shell: bash
-      run: echo "##[set-output name=tags;]quay.io/rebuy/cost-exporter:${GITHUB_REF#refs/tags/},074509403805.dkr.ecr.eu-west-1.amazonaws.com/cost-exporter:${GITHUB_REF#refs/tags/}"
+      run: echo "tags=quay.io/rebuy/cost-exporter:${GITHUB_REF#refs/tags/},074509403805.dkr.ecr.eu-west-1.amazonaws.com/cost-exporter:${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
       id: generate_tags_release
 
     - name: Generate image tags for PRs
@@ -51,10 +51,10 @@ jobs:
       run: |
         if [ "${GITHUB_EVENT_NAME}" == "pull_request" ]; then
           BRANCH="$(echo ${GITHUB_HEAD_REF} | tr '/' '_')"
-          echo "##[set-output name=tags;]quay.io/rebuy/cost-exporter:${BRANCH},074509403805.dkr.ecr.eu-west-1.amazonaws.com/cost-exporter:${BRANCH}"
+          echo "tags=quay.io/rebuy/cost-exporter:${BRANCH},074509403805.dkr.ecr.eu-west-1.amazonaws.com/cost-exporter:${BRANCH}" >> $GITHUB_OUTPUT
         else
-          echo "##[set-output name=tags;]quay.io/rebuy/cost-exporter:main,074509403805.dkr.ecr.eu-west-1.amazonaws.com/cost-exporter:main,\
-            quay.io/rebuy/cost-exporter:latest,074509403805.dkr.ecr.eu-west-1.amazonaws.com/cost-exporter:latest"
+          echo "tags=quay.io/rebuy/cost-exporter:main,074509403805.dkr.ecr.eu-west-1.amazonaws.com/cost-exporter:main,\
+            quay.io/rebuy/cost-exporter:latest,074509403805.dkr.ecr.eu-west-1.amazonaws.com/cost-exporter:latest" >> $GITHUB_OUTPUT
         fi
       id: generate_tags_pr
 
