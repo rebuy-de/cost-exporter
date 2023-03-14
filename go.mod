@@ -7,7 +7,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.18.15
 	github.com/aws/aws-sdk-go-v2/credentials v1.13.15
 	github.com/aws/aws-sdk-go-v2/service/costexplorer v1.25.5
-	github.com/aws/aws-sdk-go-v2/service/ec2 v1.88.0
+	github.com/aws/aws-sdk-go-v2/service/ec2 v1.89.1
 	github.com/prometheus/client_golang v1.14.0
 	github.com/rebuy-de/rebuy-go-sdk/v4 v4.4.0
 	github.com/robfig/cron/v3 v3.0.1
@@ -34,7 +34,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/internal/v4a v1.0.18 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.11 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.1.22 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.23 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.24 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.13.21 // indirect
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.30.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.12.4 // indirect
