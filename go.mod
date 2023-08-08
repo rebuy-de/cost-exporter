@@ -6,7 +6,7 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.20.1
 	github.com/aws/aws-sdk-go-v2/config v1.18.33
 	github.com/aws/aws-sdk-go-v2/credentials v1.13.32
-	github.com/aws/aws-sdk-go-v2/service/costexplorer v1.27.0
+	github.com/aws/aws-sdk-go-v2/service/costexplorer v1.27.2
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.109.1
 	github.com/prometheus/client_golang v1.16.0
 	github.com/rebuy-de/rebuy-go-sdk/v4 v4.5.1
