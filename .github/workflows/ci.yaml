@@ -24,7 +24,7 @@ jobs:
       run: |
         go install golang.org/x/lint/golint@latest
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
     - name: Build Project
@@ -35,7 +35,7 @@ jobs:
     name: Container Build
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
