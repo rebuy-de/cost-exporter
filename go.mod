@@ -4,10 +4,10 @@ go 1.21
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.21.2
-	github.com/aws/aws-sdk-go-v2/config v1.19.0
+	github.com/aws/aws-sdk-go-v2/config v1.19.1
 	github.com/aws/aws-sdk-go-v2/credentials v1.13.43
-	github.com/aws/aws-sdk-go-v2/service/costexplorer v1.28.2
-	github.com/aws/aws-sdk-go-v2/service/ec2 v1.126.0
+	github.com/aws/aws-sdk-go-v2/service/costexplorer v1.29.0
+	github.com/aws/aws-sdk-go-v2/service/ec2 v1.128.0
 	github.com/prometheus/client_golang v1.17.0
 	github.com/rebuy-de/rebuy-go-sdk/v6 v6.1.0
 	github.com/robfig/cron/v3 v3.0.1
