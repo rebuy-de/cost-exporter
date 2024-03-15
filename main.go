@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/rebuy-de/rebuy-go-sdk/v6/pkg/cmdutil"
+	"github.com/rebuy-de/rebuy-go-sdk/v7/pkg/cmdutil"
 	"github.com/sirupsen/logrus"
 
 	"github.com/rebuy-de/cost-exporter/cmd"

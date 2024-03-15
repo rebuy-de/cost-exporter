@@ -6,8 +6,8 @@ import (
 	"github.com/rebuy-de/cost-exporter/pkg/config"
 	"github.com/rebuy-de/cost-exporter/pkg/prom"
 	"github.com/rebuy-de/cost-exporter/pkg/retriever"
-	"github.com/rebuy-de/rebuy-go-sdk/v6/pkg/cmdutil"
-	_ "github.com/rebuy-de/rebuy-go-sdk/v6/pkg/instutil"
+	"github.com/rebuy-de/rebuy-go-sdk/v7/pkg/cmdutil"
+	_ "github.com/rebuy-de/rebuy-go-sdk/v7/pkg/instutil"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
