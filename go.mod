@@ -4,10 +4,10 @@ go 1.22.0
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.27.0
-	github.com/aws/aws-sdk-go-v2/config v1.27.15
-	github.com/aws/aws-sdk-go-v2/credentials v1.17.15
-	github.com/aws/aws-sdk-go-v2/service/costexplorer v1.38.3
-	github.com/aws/aws-sdk-go-v2/service/ec2 v1.161.3
+	github.com/aws/aws-sdk-go-v2/config v1.27.16
+	github.com/aws/aws-sdk-go-v2/credentials v1.17.16
+	github.com/aws/aws-sdk-go-v2/service/costexplorer v1.38.4
+	github.com/aws/aws-sdk-go-v2/service/ec2 v1.161.4
 	github.com/prometheus/client_golang v1.19.1
 	github.com/rebuy-de/rebuy-go-sdk/v7 v7.1.0
 	github.com/robfig/cron/v3 v3.0.1
@@ -36,9 +36,9 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.11.9 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.17.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.50.1 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sso v1.20.8 // indirect
-	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.24.2 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sts v1.28.9 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sso v1.20.9 // indirect
+	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.24.3 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sts v1.28.10 // indirect
 	github.com/aws/smithy-go v1.20.2 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blakesmith/ar v0.0.0-20190502131153-809d4375e1fb // indirect
