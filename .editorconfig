@@ -3,9 +3,6 @@
 
 root = true
 
-[openapi-spec.yaml]
-ij_formatter_enabled = false
-
 [*]
 charset = utf-8
 end_of_line = lf
@@ -22,6 +19,15 @@ ij_formatter_tags_enabled = true
 ij_smart_tabs = false
 ij_visual_guides =
 ij_wrap_on_typing = false
+
+[openapi-spec.yaml]
+ij_formatter_enabled = false
+
+[*.bpmn]
+ij_formatter_enabled = false
+
+[*.tf]
+ij_formatter_enabled = false
 
 [{*.htm,*.html,*.sht,*.shtm,*.shtml}]
 ij_html_attribute_wrap = off
@@ -125,3 +131,8 @@ ij_scala_multiline_string_closing_quotes_on_new_line = false
 [{*.yaml,*.yml}]
 ij_yaml_spaces_within_braces = false
 ij_yaml_spaces_within_brackets = false
+
+[*.pp]
+indent_size = 2
+tab_width = 2
+ij_continuation_indent_size = 2
