@@ -1,7 +1,7 @@
 package config
 
 import (
-	"io/ioutil"
+	"os"
 
 	"github.com/sirupsen/logrus"
 	yaml "gopkg.in/yaml.v3"
@@ -25,7 +25,7 @@ func Parse(configPath string) Config {
 	config := Config{}
 	var err error
 
-	raw, err := ioutil.ReadFile(configPath)
+	raw, err := os.ReadFile(configPath)
 	if err != nil {
 		logrus.Fatal(err)
 	}
