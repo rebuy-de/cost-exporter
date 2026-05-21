@@ -108,4 +108,4 @@ jobs:
         context: .
         push: true
         tags: ${{ steps.generate_tags_pr.outputs.tags }}
-        platforms: linux/amd64
+        platforms: linux/amd64,linux/arm64
