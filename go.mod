@@ -1,6 +1,6 @@
 module github.com/rebuy-de/cost-exporter
 
-go 1.26.0
+go 1.27.0
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.46.0
